@@ -1,0 +1,56 @@
+package com.study.structure.graph;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
+/**
+ * @Description 课程安排的顺序
+ * @Author Yin
+ * @Date 2020/6/24 20:16
+ * @Version 1.0
+ **/
+public class FindOrder {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<Integer>[] graphic = new List[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graphic[i] = new ArrayList<>();
+        }
+        for (int[] pre : prerequisites) {
+            graphic[pre[0]].add(pre[1]);
+        }
+        Deque<Integer> postOrder = new ArrayDeque<>();
+        boolean[] globalMarked = new boolean[numCourses];
+        boolean[] localMarked = new boolean[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            if(hasCycle(globalMarked,localMarked,graphic,i,postOrder)){
+                return new int[0];
+            }
+        }
+        int[] orders = new int[numCourses];
+        for (int i = numCourses-1; i >= 0; i--) {
+            orders[i] = postOrder.pop();
+        }
+        return orders;
+    }
+
+    private boolean hasCycle(boolean[] globalMarked, boolean[] localMarked, List<Integer>[] graphic, int curNode, Deque<Integer> postOrder) {
+        if(localMarked[curNode]){
+            return true;
+        }
+        if(globalMarked[curNode]){
+            return false;
+        }
+        globalMarked[curNode] = true;
+        localMarked[curNode] = true;
+        for (int nextNode : graphic[curNode]) {
+            if(hasCycle(globalMarked,localMarked,graphic,nextNode,postOrder)){
+                return true;
+            }
+        }
+        localMarked[curNode] = false;
+        postOrder.push(curNode);
+        return false;
+    }
+}
