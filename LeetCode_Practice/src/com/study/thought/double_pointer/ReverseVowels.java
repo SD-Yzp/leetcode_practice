@@ -1,7 +1,7 @@
 package com.study.thought.double_pointer;
 
 /**
- * @Description TODO
+ * @Description 反转
  * @Author Yin
  * @Date 2020/5/28 15:56
  * @Version 1.0
